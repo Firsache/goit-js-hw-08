@@ -1,84 +1,72 @@
 // Add imports above this line
 import { galleryItems } from './gallery-items';
 // Change code below this line
-// import SimpleLightbox from "simplelightbox";
-// import "simplelightbox/dist/simple-lightbox.min.css";
+import SimpleLightbox from 'simplelightbox';
+
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const galleryEl = document.querySelector('.gallery');
 
 function createImageMarkUp(items) {
-    return items
-        .map(({ preview, original, description }) => {
-        return `
-            <div class="gallery__item">
-            <a class="gallery__link" href="${original}">
-                <img
-                loading="lazy"
+  return items
+    .map(({ preview, original, description }) => {
+      return `
+            <a class="gallery__item" href="${original}">
+                <img loading="lazy"
                 class="gallery__image lazyload"
-                data-src="${preview}"
-                data-source="${original}"
-                alt="${description}"
-                />
+                data-src="${preview}" 
+                alt="${description}" />
             </a>
-            </div>
-        `
-    }).join('');
+        `;
+    })
+    .join('');
 }
 function renderImageMarkUp(items) {
-    galleryEl.innerHTML = createImageMarkUp(items);
+  galleryEl.innerHTML = createImageMarkUp(items);
 }
 renderImageMarkUp(galleryItems);
 
-// galleryEl.addEventListener('click', onGalleryItemClickModalOpen);
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
 
-// let instance;
+galleryEl.addEventListener('click', onGalleryItemClickModalOpen);
 
-// function onGalleryItemClickModalOpen(evt) {
-//     evt.preventDefault();
-    
-//     if (evt.target.nodeName !== 'IMG') {
-//         return;
-//     }
-//     instance = basicLightbox.create(`
-//         <img src="${evt.target.dataset.source}" alt="${evt.target.alt}" width="800">
-//     `);
-    
-//     instance.show()
+function onGalleryItemClickModalOpen(evt) {
+  evt.preventDefault();
 
-//     document.addEventListener('keydown', onEscKeyBtnPress);
-// }
+  if (evt.target.nodeName !== 'IMG') {
+    return;
+  }
+  lightbox.on(show.simplelightbox);
 
-// function onEscKeyBtnPress(evt) {
-//     if (evt.code === 'Escape') {
-//         closeModal()
-//     }
-    
-// }
-
-// function closeModal() {
-//     instance.close()
-//     document.removeEventListener('keydown', onEscKeyBtnPress);
-// }
+  document.addEventListener('keydown', evt => {
+    if (evt.code === 'Escape') {
+      close.simplelightbox;
+    }
+  });
+}
 
 const addSrcAttributeToIm = () => {
-    const galleryImgEls = document.querySelectorAll('.gallery__image');
+  const galleryImgEls = document.querySelectorAll('.gallery__image');
 
-    galleryImgEls.forEach(elem => {
-        elem.src = elem.dataset.src;
-    })
-}
+  galleryImgEls.forEach(elem => {
+    elem.src = elem.dataset.src;
+  });
+};
 
 const createLazySizesScript = () => {
-    const script = document.createElement('.script');
+  const script = document.createElement('.script');
 
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
-    return script;
-
-}
+  script.src =
+    'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+  return script;
+};
 
 if ('loading' in HTMLImageElement.prototype) {
-    addSrcAttributeToIm();
+  addSrcAttributeToIm();
 } else {
-    document.body.append(createLazySizesScript())
+  document.body.append(createLazySizesScript());
 }
-    
