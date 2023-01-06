@@ -16,45 +16,48 @@ function onFormInput(evt) {
     //     my first idea is below
     // 
     // if (form.name === 'email') {
-    //     formInfo.email = form.value;
+    //     formData.email = form.value;
     // } else if (form.name === 'message') {
-    //     formInfo.message = form.value;
+    //     formData.message = form.value;
     // }
     localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(formData));
 }
 function onFormSubmit(evt) {
     evt.preventDefault();
+
     evt.currentTarget.reset();
     localStorage.removeItem(LOCALSTORAGE_KEY);
-
-    
-    // localStorage.getItem(LOCALSTORAGE_KEY) || "";
 }
-function populateFormInput() {
-    let savedUserInfo;
-    let formElement = refs.formEL.elements;
-
+function populateFormInput() {    
     try {
-        savedUserInfo = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY));
+        let formElements = refs.formEL.elements;
+        const savedUserInfo = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY));
+
+        // console.dir(refs.formEL);
+        if (savedUserInfo) {
+            formElements.email.value = savedUserInfo.email || '';
+            formElements.message.value = savedUserInfo.message||'';
+        }                
+    
+        // ====================================================================
+        //     my idea form a lecture is below
+        // 
+        // for (const field in savedUserInfo) {
+        //     formElements[field].value = savedUserInfo[field] || '';
+        // }
+        // ====================================================================
+        //     my first idea is below
+        // 
+        // if (savedUserInfo.email) {
+        //     refs.formEL[0].value = savedUserInfo.email;
+        // }
+        // if (savedUserInfo.message) {
+        //     refs.formEL[1].value = savedUserInfo.message;
+        // }
     }
     catch (err) {
         console.log(err);
     }
-        
-    // console.dir(refs.formEL);
-    if (savedUserInfo) {
-        formElement.email.value = savedUserInfo.email || '';
-        formElement.message.value = savedUserInfo.message||'';
-    }
-    // ====================================================================
-    //     my first idea is below
-    // 
-    // if (savedUserInfo.email) {
-    //     refs.form[0].value = savedUserInfo.email;
-    // }
-    // if (savedUserInfo.message) {
-    //     refs.form[1].value = savedUserInfo.message;
-    // }
 }
 refs.formEL.addEventListener('input', throttle(onFormInput, 500));
 refs.formEL.addEventListener('submit', onFormSubmit);
